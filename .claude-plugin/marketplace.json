@@ -11,7 +11,7 @@
     {
       "name": "asynkron-devtools",
       "source": ".",
-      "description": "Profiler, test runner, code duplication detector, and line counter skills for .NET and general development"
+      "description": "Profiler, test runner, code duplication detector, line counter, and test bomb methodology for .NET and general development"
     }
   ]
 }
