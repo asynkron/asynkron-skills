@@ -1,6 +1,6 @@
 {
   "name": "asynkron-devtools",
-  "description": "ASYNKRON developer tools — profiler, test runner, code duplication detector, line counter, test bomb and layered test methodologies",
+  "description": "ASYNKRON developer tools — profiler, test runner, code duplication detector, line counter, pre-PR checklist, test bomb and layered test methodologies",
   "version": "1.0.0",
   "author": {
     "name": "ASYNKRON"
