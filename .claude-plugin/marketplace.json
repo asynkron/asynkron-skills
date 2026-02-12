@@ -1,0 +1,17 @@
+{
+  "name": "asynkron-marketplace",
+  "owner": {
+    "name": "ASYNKRON"
+  },
+  "metadata": {
+    "description": "ASYNKRON developer tools for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "asynkron-devtools",
+      "source": ".",
+      "description": "Profiler, test runner, code duplication detector, and line counter skills for .NET and general development"
+    }
+  ]
+}
