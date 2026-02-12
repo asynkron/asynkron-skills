@@ -8,11 +8,11 @@ Developer tool skills for AI coding agents. Works with Claude Code, Codex, Curso
 
 ## General Skills
 
-### cloc
+### `/cloc`
 
 Count lines of code using [cloc](https://github.com/AlDanial/cloc). Analyze codebase size, language breakdown, and compare code between git refs. Supports 200+ languages and multiple output formats (JSON, YAML, CSV, Markdown).
 
-### quickdup
+### `/quickdup`
 
 Detect code duplication using [QuickDup](https://github.com/asynkron/Asynkron.QuickDup). A fast structural clone detector that processes ~100k lines in 500ms. Surfaces duplication candidates for AI-assisted review.
 
@@ -23,7 +23,7 @@ Includes refactoring guidance for 4 types of duplication:
 - **Parameter bundle duplication** — same group of parameters passed together. Extract a value object.
 - **Argument unpacking duplication** — repeated defensive parsing of callback arguments. Extract a helper.
 
-### systematic-debug
+### `/systematic-debug`
 
 Two complementary debugging techniques for when the root cause of a bug is unclear.
 
@@ -35,7 +35,7 @@ Use test bombs first to narrow the component, then layered tests to pinpoint the
 
 ## .NET Skills
 
-### profile
+### `/profile`
 
 Profile .NET applications using [Asynkron.Profiler](https://github.com/asynkron/Asynkron.Profiler). A CLI profiler that outputs structured text — no GUI needed. Runs via `dnx` (no install required).
 
@@ -48,7 +48,7 @@ Includes a full profiling methodology (symptom-to-mode table, reading hot functi
 - **Object pooling** — lock-free pools with RAII wrappers for hot allocations
 - **Thread-safe lazy init** — `Volatile.Read` + `CompareExchange` without `Lazy<T>` overhead
 
-### testrunner
+### `/testrunner`
 
 Alternative .NET test runner using [Asynkron.TestRunner](https://github.com/asynkron/Asynkron.TestRunner). Wraps `dotnet test` with added resilience for unstable test suites. Runs via `dnx` (no install required).
 
@@ -56,19 +56,19 @@ Handles tests that hang, crash the process, cause OOM, or stack overflow — sce
 
 This is not a replacement for `dotnet test`. Only use it when standard tooling fails.
 
-### roslynator
+### `/roslynator`
 
 C# static analysis using [Roslynator](https://github.com/dotnet/roslynator). Auto-fix diagnostics, format code, find unused declarations, count lines of code, and check spelling — all from the command line.
 
 Covers the `fix`, `analyze`, `format`, `find-unused`, `spellcheck`, `lloc`, and `loc` commands with key flags and `.editorconfig` configuration.
 
-### dotnet-strict
+### `/dotnet-strict`
 
 Apply strict .NET coding standards to any project. Adds Roslynator + Meziantou analyzer packages and drops a comprehensive `.editorconfig` with 80+ diagnostic rules.
 
 Covers performance (CA18xx — Span/Memory, Count vs Any, seal internal types), dead code (unused parameters, members, fields), correctness (rethrow, CancellationToken forwarding, ValueTask), culture safety (IFormatProvider, String.Equals), modern C# style (file-scoped namespaces, pattern matching, var everywhere), and naming conventions (PascalCase constants, _camelCase private fields).
 
-### pre-pr
+### `/pre-pr`
 
 Pre-PR quality gate for .NET projects. Runs a mandatory checklist before creating any pull request:
 
