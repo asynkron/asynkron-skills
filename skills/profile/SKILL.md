@@ -109,6 +109,115 @@ dnx asynkron-profiler --input /path/to/heap.gcdump --heap
 | Contention | `.nettrace`, `.etlx` |
 | Heap | `.gcdump` |
 
+---
+
+## Profiling Methodology
+
+Profiling is iterative. Follow this workflow to systematically identify and eliminate bottlenecks.
+
+### Step 1: Build Release First
+
+Always build Release before profiling. Debug builds have disabled optimizations, extra checks, and no inlining — profiling them gives misleading results.
+
+```
+dotnet build -c Release
+```
+
+### Step 2: Choose the Right Mode
+
+| Symptom | Start with |
+|---------|------------|
+| High CPU / slow execution | `--cpu` |
+| High memory / GC pressure | `--memory` |
+| High latency but low CPU | `--contention` |
+| Too many exceptions in logs | `--exception` |
+| Memory keeps growing (leak) | `--heap` |
+| Want to verify JIT optimization | JIT/inlining analysis |
+
+### Step 3: Read the Hot Function Table
+
+The profiler outputs a hot function table showing where time or allocations are concentrated:
+
+```
+=== HOT FUNCTIONS ===
+   Time (ms)      Calls  Function
+-------------------------------------------------
+    38805.39      19533  MyApp.Core.ProcessItem...
+    19769.23       9897  MyApp.Core.TransformData...
+```
+
+Focus on the top 3-5 entries. These are your optimization targets.
+
+### Step 4: Read the Allocation Call Graph
+
+For memory profiling, the allocation call graph shows *where* allocations originate:
+
+```
+CreateEnvironment
+  Calls: 1048
+  Allocated by:
+    <- ProcessLoop (1048x, 100%)
+         <- RunMain (4x)
+```
+
+This traces allocations back to their source — the method that triggered them, not just where `new` was called.
+
+### Step 5: Iterate
+
+1. Profile to find the top bottleneck
+2. Fix it (optimize hot path, reduce allocations, remove contention)
+3. Profile again to measure improvement
+4. Repeat until performance targets are met
+
+Track progress across rounds:
+```
+Round 1: 322 MB, 172 ms
+Round 2: 173 MB, 150 ms  (pooling)
+Round 3: 107 MB, 116 ms  (fast paths)
+```
+
+### Step 6: Use Manual Tracing for Deep Dives
+
+When the profiler summary isn't enough, capture a detailed trace for manual analysis:
+
+```bash
+# Capture detailed GC trace
+dotnet-trace collect \
+  --profile gc-verbose \
+  --format NetTrace \
+  -o trace.nettrace \
+  -- dotnet run -c Release --project ./MyApp
+
+# Analyze with the profiler
+dnx asynkron-profiler --input trace.nettrace --memory
+
+# Or convert for external tools
+dotnet-trace convert trace.nettrace --format Speedscope
+```
+
+### Common Optimization Patterns
+
+**Reduce allocations in hot loops:**
+- Use object pooling for frequently created/disposed objects
+- Use `Span<T>` / `stackalloc` for short-lived buffers
+- Avoid boxing value types (use generic overloads)
+
+**Reduce CPU in hot paths:**
+- Use `[MethodImpl(MethodImplOptions.AggressiveInlining)]` on small hot methods
+- Split into fast path (inlined, common case) and slow path (`NoInlining`, rare case)
+- Cache computed values instead of recomputing
+
+**Reduce contention:**
+- Use lock-free patterns (`Interlocked`, `ConcurrentDictionary`)
+- Reduce lock scope — hold locks for the shortest time possible
+- Use `ReaderWriterLockSlim` for read-heavy workloads
+
+**Reduce exceptions:**
+- Use `TryParse` / `TryGet` patterns instead of catching exceptions
+- Exceptions are expensive — never use them for control flow
+
+---
+
 ## Guidelines
 
 - Always build Release first (`dotnet build -c Release`) before profiling — profiling Debug builds gives misleading results
@@ -119,3 +228,4 @@ dnx asynkron-profiler --input /path/to/heap.gcdump --heap
 - For memory issues, start with `--memory` to find allocation sources, then `--heap` for retained object analysis
 - For performance, start with `--cpu`, then drill into contention if CPU usage is low but latency is high
 - For exception-heavy apps, use `--exception` with `--exception-type` to focus on specific exception categories
+- Profile iteratively — fix one bottleneck at a time and measure the improvement before moving on
