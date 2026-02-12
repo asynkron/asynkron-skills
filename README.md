@@ -105,6 +105,20 @@ Skills are discovered automatically via `.github/copilot-instructions.md`.
 
 Each skill is a self-contained markdown file at `skills/<name>/SKILL.md` containing prerequisites, usage patterns, flags, and methodology. The tool-specific config files just point to these files — the skill content is the single source of truth.
 
+## Consistency Check
+
+Validate that all skill indexes stay in sync:
+
+```bash
+./scripts/check-skill-index.sh
+```
+
+Enable the local pre-commit hook:
+
+```bash
+./scripts/install-git-hooks.sh
+```
+
 ## License
 
 MIT

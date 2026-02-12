@@ -1,0 +1,30 @@
+name: Skill Index Consistency
+
+on:
+  pull_request:
+    paths:
+      - AGENTS.md
+      - skills/**
+      - .cursor/rules/**
+      - .github/copilot-instructions.md
+      - scripts/check-skill-index.sh
+      - .github/workflows/skill-index-consistency.yml
+  push:
+    branches:
+      - main
+    paths:
+      - AGENTS.md
+      - skills/**
+      - .cursor/rules/**
+      - .github/copilot-instructions.md
+      - scripts/check-skill-index.sh
+      - .github/workflows/skill-index-consistency.yml
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify skill index consistency
+        run: ./scripts/check-skill-index.sh

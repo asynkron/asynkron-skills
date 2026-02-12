@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+echo "Running skill index consistency check..."
+"${repo_root}/scripts/check-skill-index.sh"
