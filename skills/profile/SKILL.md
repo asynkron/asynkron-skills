@@ -218,6 +218,167 @@ dotnet-trace convert trace.nettrace --format Speedscope
 
 ---
 
+## JIT-Aware Optimization Patterns
+
+These patterns work *with* the .NET JIT compiler to produce faster native code. Use the profiler's JIT/inlining analysis to verify these optimizations take effect.
+
+### Fast/Slow Path Split
+
+The most impactful pattern for hot methods. The JIT inlines small methods into their callers, eliminating call overhead and enabling further optimizations. But it won't inline large methods. The trick: keep the common case tiny and inlineable, push the rare case into a separate non-inlined method.
+
+```csharp
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+private static Result HandleHotPath(Data data)
+{
+    // Fast path: ~20-30 lines max, handles the common case
+    if (data.IsSimpleCase)
+    {
+        // Direct, minimal work
+        return Result.From(data.Value);
+    }
+
+    // Rare/complex case — delegate to non-inlined method
+    return HandleHotPathSlow(data);
+}
+
+[MethodImpl(MethodImplOptions.NoInlining)]
+private static Result HandleHotPathSlow(Data data)
+{
+    // Complex logic: type coercion, error handling, edge cases
+    // This can be as large as needed — it won't bloat the call site
+}
+```
+
+**Why this works:**
+- The JIT inlines the fast path directly into the hot loop
+- The slow path stays as a regular call — it doesn't bloat the inlined code
+- CPU branch prediction favors the fast path since it's the common case
+- Instruction cache stays hot because the loop body is small
+
+**When to apply:**
+- Method shows up in profiler hot function table
+- Method has a common fast case and rare complex case
+- The fast case is under ~30 lines
+- The method is called in a tight loop
+
+**How to verify:** Use the profiler's JIT/inlining analysis to confirm the fast path is being inlined at the call site.
+
+### Dispatch Tables vs Switch Statements
+
+For hot dispatch (e.g., instruction interpreters, message handlers, event processors), a delegate array indexed by enum is faster than a switch:
+
+```csharp
+// Define handler signature
+delegate Result Handler(Context ctx, Instruction instr);
+
+// Build dispatch table once (static constructor)
+private static readonly Handler[] _dispatch = new Handler[64];
+
+static MyRunner()
+{
+    _dispatch[(int)Kind.Add] = HandleAdd;
+    _dispatch[(int)Kind.Call] = HandleCall;
+    _dispatch[(int)Kind.Branch] = HandleBranch;
+    // ...
+}
+
+// Hot loop — direct delegate invocation, no switch overhead
+while (running)
+{
+    var instr = instructions[pc];
+    var result = _dispatch[(int)instr.Kind](ctx, instr);
+    // ...
+}
+```
+
+**Why this works:**
+- Direct indexed lookup — O(1), no comparisons
+- Each handler can have its own inlining attributes
+- Scales better than switch as the number of cases grows
+
+**When to apply:**
+- Dispatch over an enum with 10+ cases
+- Called in a tight loop (interpreter, event loop, message pump)
+- Switch shows up in profiler as a hot function
+
+### Object Pooling for Hot Allocations
+
+When the profiler shows a type being allocated millions of times in a loop, pool it instead.
+
+```csharp
+// 1. Define what poolable objects look like
+interface IRentable
+{
+    void Activate();  // Called when rented — initialize state
+    void Reset();     // Called when returned — clear state for reuse
+}
+
+// 2. Lock-free pool using Interlocked.CompareExchange
+class ObjectPool<T> where T : class, IRentable
+{
+    private readonly T?[] _items;
+    private readonly Func<T> _factory;
+
+    public T Rent()
+    {
+        for (int i = 0; i < _items.Length; i++)
+        {
+            var item = Interlocked.Exchange(ref _items[i], null);
+            if (item is not null) { item.Activate(); return item; }
+        }
+        var created = _factory();
+        created.Activate();
+        return created;
+    }
+
+    public void Return(T item)
+    {
+        item.Reset();
+        for (int i = 0; i < _items.Length; i++)
+        {
+            if (Interlocked.CompareExchange(ref _items[i], item, null) == null)
+                return;
+        }
+        // Pool full — abandon to GC (graceful degradation)
+    }
+}
+
+// 3. RAII wrapper ensures objects are returned
+using var handle = pool.Rent();
+var obj = handle.Value;
+// ... use obj ...
+// Automatically returned on dispose
+```
+
+**Impact:** A tight loop creating 1M scoped objects goes from 1M allocations to ~32 (pool size). Dramatically reduces GC pressure.
+
+**When to apply:**
+- A type shows up in the memory profiler's top allocations
+- It's created and disposed in a tight loop
+- Its lifetime is short and predictable
+- The type can be cleanly reset for reuse
+
+### Thread-Safe Lazy Initialization
+
+For cached computed values that are expensive to create but read frequently:
+
+```csharp
+static TCache GetOrCreate<TCache>(ref TCache? field, Func<TCache> factory)
+    where TCache : class
+{
+    var existing = Volatile.Read(ref field);
+    if (existing is not null) return existing;
+
+    var created = factory();
+    var prior = Interlocked.CompareExchange(ref field, created, null);
+    return prior ?? created;
+}
+```
+
+**Why not `Lazy<T>`:** This pattern avoids the `Lazy<T>` allocation itself, and the `Volatile.Read` fast path is a single instruction on x86/ARM. The worst case (two threads create simultaneously) wastes one creation but is still correct — no locks needed.
+
+---
+
 ## Guidelines
 
 - Always build Release first (`dotnet build -c Release`) before profiling — profiling Debug builds gives misleading results
