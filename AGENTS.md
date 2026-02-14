@@ -9,6 +9,7 @@ This repository contains reusable developer tool skills. Each skill is a self-co
 - **[cloc](skills/cloc/SKILL.md)** — Count lines of code, analyze codebase size and language breakdown
 - **[quickdup](skills/quickdup/SKILL.md)** — Detect code duplication, find clones, reduce codebase size. Includes 4 refactoring patterns for different duplication types
 - **[systematic-debug](skills/systematic-debug/SKILL.md)** — Systematic debugging with test bombs (hypothesis elimination) and layered tests (pipeline stage isolation)
+- **[palette](skills/palette/SKILL.md)** — Generate color palettes with Tailwind-scale shades using OKLCH. Supports color wheel strategies, mood presets (vibrant/pastel), and automatic normalization
 
 ### .NET Specific
 

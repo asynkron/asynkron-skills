@@ -33,6 +33,14 @@ Two complementary debugging techniques for when the root cause of a bug is uncle
 
 Use test bombs first to narrow the component, then layered tests to pinpoint the exact stage. Templates for C#, TypeScript, Python, and Go.
 
+### `/palette`
+
+Generate color palettes with Tailwind-scale shades using [Asynkron.Palette](https://github.com/asynkron/Asynkron.Palette). A zero-dependency CLI that takes hex colors, a color wheel strategy, and a count, and outputs a complete palette with 11 perceptually uniform shades per color (OKLCH color space). Runs via `npx @asynkron/palette` (no install required).
+
+Pass one or more base colors (or none for a random palette), pick a strategy (`triadic`, `analogous`, `complementary`, `split-complementary`, `tetradic`, `evenly-spaced`), and set a count. All colors are automatically normalized to matching lightness and chroma so the palette looks cohesive. Mood presets (`--vibrant`, `--pastel`) override the target energy level. Use `--raw` to keep exact input colors.
+
+Colors are named semantically (`primary`, `secondary`, `tertiary`, `accent`, `neutral`) with Tailwind shade numbers (50–950). ANSI color output in terminals. Accepts hex with or without `#` prefix.
+
 ## .NET Skills
 
 ### `/profile`
