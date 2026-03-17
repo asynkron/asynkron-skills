@@ -15,3 +15,4 @@ This repository contains reusable developer tool skills in `skills/<name>/SKILL.
 | roslynator | `skills/roslynator/SKILL.md` | C# static analysis, auto-fix, formatting |
 | dotnet-strict | `skills/dotnet-strict/SKILL.md` | Setting up strict .NET coding standards |
 | pre-pr | `skills/pre-pr/SKILL.md` | Pre-PR quality gate for .NET projects |
+| uxly | `skills/uxly/SKILL.md` | UI consistency scanning, design system auditing via Chrome DevTools MCP |
