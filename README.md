@@ -41,6 +41,12 @@ Pass one or more base colors (or none for a random palette), pick a strategy (`t
 
 Colors are named semantically (`primary`, `secondary`, `tertiary`, `accent`, `neutral`) with Tailwind shade numbers (50–950). ANSI color output in terminals. Accepts hex with or without `#` prefix.
 
+### `/hotmess`
+
+Git churn analysis that goes beyond a flat "most-edited files" list. Reads `git log --numstat` over a window and auto-detects clusters by directory, by filename stem (`foo.go` + `foo_test.go` grouped), and by **co-change** (files modified in the same commit, with Jaccard overlap). Classifies each cluster as **hotspot**, **spec-drift**, **rewriting**, **active dev**, or **stable** based on commit count, deletion ratio, test ratio, and co-change overlap, then explains *why* each cluster is a problem and what to do about it.
+
+Pass a folder, a time window (`7 days ago`, `1 month ago`, ISO date), and optionally an extension or list (`.go`, `.ts,.tsx`); auto-detects code files when no extension is given. Add `--html /tmp/hotmess.html` for a standalone Mermaid module-map visualization with cross-directory co-change edges and collapsible signal tables. Pure Python stdlib + git, no external dependencies.
+
 ## .NET Skills
 
 ### `/profile`
