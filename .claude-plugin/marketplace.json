@@ -14,7 +14,7 @@
         "source": "url",
         "url": "https://github.com/asynkron/asynkron-skills.git"
       },
-      "description": "Profiler, test runner, code duplication detector, line counter, test bomb and layered test methodologies for .NET and general development"
+      "description": "Profiler, test runner, code duplication detector, line counter, continue-loop, test bomb and layered test methodologies for .NET and general development"
     }
   ]
 }

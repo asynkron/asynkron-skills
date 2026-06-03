@@ -1,0 +1,4 @@
+interface:
+  display_name: "Continue Loop"
+  short_description: "Keep iterating on the next project step"
+  default_prompt: "Use this skill to repeatedly choose, execute, verify, and record the next logical step in the current project until a real stop condition is reached."

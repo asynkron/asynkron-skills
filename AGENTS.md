@@ -9,6 +9,7 @@ This repository contains reusable developer tool skills. Each skill is a self-co
 - **[cloc](skills/cloc/SKILL.md)** — Count lines of code, analyze codebase size and language breakdown
 - **[quickdup](skills/quickdup/SKILL.md)** — Detect code duplication, find clones, reduce codebase size. Includes 4 refactoring patterns for different duplication types
 - **[systematic-debug](skills/systematic-debug/SKILL.md)** — Systematic debugging with test bombs (hypothesis elimination) and layered tests (pipeline stage isolation)
+- **[continue-loop](skills/continue-loop/SKILL.md)** — Keep iterating on the next project step, with persisted loop state and verification records
 - **[palette](skills/palette/SKILL.md)** — Generate color palettes with Tailwind-scale shades using OKLCH. Supports color wheel strategies, mood presets (vibrant/pastel), and automatic normalization
 - **[uxly](skills/uxly/SKILL.md)** — Scan web pages for UI consistency issues via Chrome DevTools MCP. Detects misalignment, bad contrast, near-miss colors, inconsistent spacing, font sizes, and 40+ other design system violations. Includes pixel-accurate contrast sampling
 - **[hotmess](skills/hotmess/SKILL.md)** — Git churn analysis. Auto-detects clusters of high-churn code (by directory, filename stem, and co-change), classifies them (hotspot / spec-drift / rewrite / active dev / stable), and explains why each cluster is a problem. Optional Mermaid HTML module map.

@@ -33,6 +33,10 @@ Two complementary debugging techniques for when the root cause of a bug is uncle
 
 Use test bombs first to narrow the component, then layered tests to pinpoint the exact stage. Templates for C#, TypeScript, Python, and Go.
 
+### `/continue-loop`
+
+Keep iterating on the next logical project step until a real stop condition is reached. The skill uses a small persisted loop state under `$CODEX_HOME/state/continue-loop` so agents can choose a bounded next slice, complete it, verify it, record what happened, and either continue or stop cleanly.
+
 ### `/palette`
 
 Generate color palettes with Tailwind-scale shades using [Asynkron.Palette](https://github.com/asynkron/Asynkron.Palette). A zero-dependency CLI that takes hex colors, a color wheel strategy, and a count, and outputs a complete palette with 11 perceptually uniform shades per color (OKLCH color space). Runs via `npx @asynkron/palette` (no install required).
