@@ -1,0 +1,4 @@
+interface:
+  display_name: "API Dog Food"
+  short_description: "Evaluate APIs through real API-first tasks"
+  default_prompt: "Use $api-dog-food to evaluate this API through real tasks and turn the evidence into improvements."

@@ -6,6 +6,7 @@ This repository contains reusable developer tool skills. Each skill is a self-co
 
 ### General (any language)
 
+- **[api-dog-food](skills/api-dog-food/SKILL.md)** — Evaluate APIs through real tasks, measure the value and quality of their data, and produce evidence-backed keep, improve, combine, or retire decisions
 - **[cloc](skills/cloc/SKILL.md)** — Count lines of code, analyze codebase size and language breakdown
 - **[quickdup](skills/quickdup/SKILL.md)** — Detect code duplication, find clones, reduce codebase size. Includes 4 refactoring patterns for different duplication types
 - **[systematic-debug](skills/systematic-debug/SKILL.md)** — Systematic debugging with test bombs (hypothesis elimination) and layered tests (pipeline stage isolation)

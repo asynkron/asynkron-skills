@@ -8,6 +8,12 @@ Developer tool skills for AI coding agents. Works with Claude Code, Codex, Curso
 
 ## General Skills
 
+### `/api-dog-food`
+
+Evaluate and improve an API by using it to solve real, valuable tasks. The workflow attempts each task through the public API first, independently verifies the result, and scores completion, correctness, signal, freshness, discoverability, actionability, and unique value.
+
+Findings become evidence-backed **keep**, **improve**, **combine**, or **retire** decisions. Retirement requires usage and replacement evidence; useful information trapped behind poor response design, stale data, noise, or awkward composition is treated as an improvement opportunity.
+
 ### `/cloc`
 
 Count lines of code using [cloc](https://github.com/AlDanial/cloc). Analyze codebase size, language breakdown, and compare code between git refs. Supports 200+ languages and multiple output formats (JSON, YAML, CSV, Markdown).

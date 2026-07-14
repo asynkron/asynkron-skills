@@ -6,6 +6,7 @@ This repository contains reusable developer tool skills in `skills/<name>/SKILL.
 
 | Skill | File | Use when |
 |-------|------|----------|
+| api-dog-food | `skills/api-dog-food/SKILL.md` | Dogfooding, auditing, improving, or rationalizing an API through real tasks |
 | cloc | `skills/cloc/SKILL.md` | Counting lines of code, codebase size analysis |
 | quickdup | `skills/quickdup/SKILL.md` | Finding code duplication, DRY violations, code cleanup |
 | systematic-debug | `skills/systematic-debug/SKILL.md` | Bug with unclear root cause, need to narrow down failing area |
